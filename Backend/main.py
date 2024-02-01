@@ -30,7 +30,7 @@ app.add_middleware(
 
 @app.get('/')
 def one():
-    return {'one one bbbbbbbbbbbbbbbbb'}
+    return {'This is first api':'Hello World'}
 
 {# url = "mongodb+srv://shanukafer98:Mongodb123.@cluster0.gtbdj6v.mongodb.net/?retryWrites=true&w=majority"  
 # client = MongoClient(url)
