@@ -33,3 +33,15 @@ def valueCounts_segment():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     return {'message': 'Data inserted into MongoDB successfully.'}
+
+@AutomateRoute.get('/valueCounts_state')
+def valueCounts_state():
+    try:
+        data3 = data['state'].value_counts().to_json()
+        # Delete all documents that have the key "state_counts"
+        collection.delete_many({"state_counts": {"$exists": True}})
+        # Insert the new document
+        collection.insert_one({"state_counts": data3})
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    return {'message': 'Data inserted into MongoDB successfully.'}
