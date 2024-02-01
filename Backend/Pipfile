@@ -1,0 +1,18 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fastapi = {extras = ["all"], version = "*"}
+psycopg2-binary = "*"
+sqlalchemy = "*"
+uvicorn = {extras = ["standard"], version = "*"}
+pymongo = {extras = ["srv"], version = "*"}
+numpy = "*"
+pandas = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.11"
