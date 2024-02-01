@@ -22,3 +22,14 @@ def get_ship_mode_counts():
         return JSONResponse(content=ship_mode_counts)
     else:
         return {"message": "No data found"}
+    
+@froute.get("/valueCounts_segment_Frontend")
+@lru_cache(maxsize=32)
+def get_segment_counts():
+    # Assuming 'segment' is the name of your collection
+    doc =collection.find_one()
+    if doc is not None:
+        segment_counts = json.loads(doc['segment_counts'])
+        return JSONResponse(content=segment_counts)
+    else:
+        return {"message": "No data found"}
