@@ -1,19 +1,15 @@
-import traceback
 from fastapi import FastAPI, HTTPException,APIRouter
-import pymongo
+import pymongo, traceback
 from pymongo.mongo_client import MongoClient
 import pandas as pd
-import traceback
 from fastapi.middleware.cors import CORSMiddleware
 
-from AllCharts.Charts import router1
-from AllCharts.bar import router2
-from AllCharts.froute import router3
+from routes.Automate import AutomateRoute
+from routes.froute import froute
 
 app = FastAPI()
-app.include_router(router1)
-app.include_router(router2)
-app.include_router(router3)
+app.include_router(froute)
+app.include_router(AutomateRoute)
 
 
 origins = [
@@ -62,21 +58,3 @@ def one():
 #     return {"data": result1}
 }
 
-@app.get('/data')
-def chart1():
-    try:
-        df1 = pd.read_csv('fullData.csv')
-        data1 = df1['ship_mode'].value_counts().to_json()
-
-        MONGO_URI = "mongodb+srv://shanukafer98:Mongodb123.@cluster0.gtbdj6v.mongodb.net/SSD"
-        COLLECTION_NAME = "ship_mode"
-        client = pymongo.MongoClient(MONGO_URI)
-        db = client.get_database()
-        collection = db[COLLECTION_NAME]
-        # Delete all documents that have the key "ship_mode_counts"
-        collection.delete_many({"ship_mode_counts": {"$exists": True}})
-        # Insert the new document
-        collection.insert_one({"ship_mode_counts": data1})
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    return {'message': 'Data inserted into MongoDB successfully.'}

@@ -10,7 +10,7 @@ function ShipModePieChart() {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    axios.get('http://localhost:8000/ship_mode_counts')
+    axios.get('http://localhost:8000/valueCounts_shipMode_Frontend')
       .then(response => {
         setData({
           labels: Object.keys(response.data),
