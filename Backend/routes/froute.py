@@ -52,3 +52,16 @@ def get_state_counts():
         return {"message": "No data found"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+@froute.get("/valueCounts_country_Frontend")
+@lru_cache(maxsize=32)
+def get_country_counts():
+    try:
+        docs = collection.find()
+        for doc in docs:
+            if 'country_counts' in doc:
+                country_counts = json.loads(doc['country_counts'])
+                return JSONResponse(content=country_counts)
+        return {"message": "No data found"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
