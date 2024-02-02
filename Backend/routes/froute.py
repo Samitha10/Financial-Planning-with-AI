@@ -17,11 +17,11 @@ collection = db[COLLECTION_NAME]
 @lru_cache(maxsize=32)
 def get_ship_mode_counts():
     try:
-        doc = collection.find_one()
-        if doc is not None:
-            ship_mode_counts = json.loads(doc['ship_mode_counts'])
-            return JSONResponse(content=ship_mode_counts)
-        else:
+        docs = collection.find()
+        for doc in docs:
+            if 'ship_mode_counts' in doc:
+                ship_mode_counts = json.loads(doc['ship_mode_counts'])
+                return JSONResponse(content=ship_mode_counts)
             return {"message": "No data found"}
     except Exception as e:
         return {"message": str(e)}
