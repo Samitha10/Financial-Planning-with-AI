@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart, ArcElement } from 'chart.js';
 
-// Register ArcElement
+// Register the ArcElement
 Chart.register(ArcElement);
 
 function ShipModePieChart() {
