@@ -15,16 +15,16 @@ collection = db[COLLECTION_NAME]
 
 @froute.get("/valueCounts_shipMode_Frontend")
 @lru_cache(maxsize=32)
-def get_ship_mode_counts():
+def get_shipmode_counts():
     try:
         docs = collection.find()
         for doc in docs:
             if 'ship_mode_counts' in doc:
                 ship_mode_counts = json.loads(doc['ship_mode_counts'])
                 return JSONResponse(content=ship_mode_counts)
-            return {"message": "No data found"}
+        return {"message": "No data found"}
     except Exception as e:
-        return {"message": str(e)}
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @froute.get("/valueCounts_segment_Frontend")
