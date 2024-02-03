@@ -8,8 +8,8 @@ from routes.Automate import AutomateRoute
 from routes.froute import froute
 
 app = FastAPI()
-app.include_router(froute)
-app.include_router(AutomateRoute)
+app.include_router(froute, prefix="/froute", tags=["froute"])
+app.include_router(AutomateRoute, prefix="/automate", tags=["automate"])
 
 
 origins = [
