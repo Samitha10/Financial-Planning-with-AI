@@ -7,41 +7,6 @@ import SegmentBarChart from './Charts/BarChart_Segment';
 import Country_State_Count from './Charts/Country_State_Count';
 
 
-// function App() {
-//   const [chartType, setChartType] = useState('pie');
-//   const [chartType1, setChartType1] = useState('pie');
-
-//   return (
-//     <>
-//       <div style={{ display: 'flex', justifyContent:'space-evenly',backgroundColor:'darkblue' }}>
-//         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '10px', }}>
-//           <div>
-//             <input type="radio" id="pie_ship_count" name="chartType" value="pie" checked={chartType === 'pie'} onChange={(e) => setChartType(e.target.value)} />
-//             <label htmlFor="pie_ship_count" style={{ marginRight: '10px' }}>Pie Chart</label>
-//             <input type="radio" id="bar_ship_count" name="chartType" value="bar" checked={chartType === 'bar'} onChange={(e) => setChartType(e.target.value)} />
-//             <label htmlFor="bar_ship_count">Bar Chart</label>
-//           </div>
-//           {chartType === 'pie' ? <ShipModePieChart/> : <ShipModeBarChart/>}
-//         </div>
-//         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '10px' }}>
-//           <div>
-//             <input type="radio" id="pie_segment" name="chartType1" value="pie" checked={chartType1 === 'pie'} onChange={(e) => setChartType1(e.target.value)} />
-//             <label htmlFor="pie_segment" style={{ marginRight: '10px' }}>Pie Chart</label>
-//             <input type="radio" id="bar_segment" name="chartType1" value="bar" checked={chartType1 === 'bar'} onChange={(e) => setChartType1(e.target.value)} />
-//             <label htmlFor="bar_segment">Bar Chart</label>
-//           </div>
-//           {chartType1 === 'pie' ? <SegmentPieChart/> : <SegmentBarChart/>}
-//         </div>
-//         <Country_State_Count/>
-//       </div>
-      
-//     </>
-//   );
-// }
-
-// export default App;
-
-import 'tailwindcss/tailwind.css';
 
 function App() {
   const [chartType, setChartType] = useState('pie');

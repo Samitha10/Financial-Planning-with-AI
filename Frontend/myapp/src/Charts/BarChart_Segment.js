@@ -10,7 +10,7 @@ function SegmentBarChart() {
   let myChart;
 
   useEffect(() => {
-    axios.get('http://localhost:8000/valueCounts_segment_Frontend')
+    axios.get('http://localhost:8000/Froute/valueCounts_segment_Frontend')
       .then(response => {
         const data = {
           labels: Object.keys(response.data),

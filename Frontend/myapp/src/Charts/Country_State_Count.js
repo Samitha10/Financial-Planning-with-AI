@@ -11,8 +11,8 @@ const Country_State_Count = () => {
 
   useEffect(() => {
     const fetchLocationData = async () => {
-      const countryResponse = await axios.get('http://localhost:8000/valueCounts_country_Frontend');
-      const stateResponse = await axios.get('http://localhost:8000/valueCounts_state_Frontend');
+      const countryResponse = await axios.get('http://localhost:8000/Froute/valueCounts_country_Frontend');
+      const stateResponse = await axios.get('http://localhost:8000/Froute/valueCounts_state_Frontend');
       setCountries(countryResponse.data);
       setStates(stateResponse.data);
     };
