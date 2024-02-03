@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import ShipModePieChart from './Charts/PieChart_ShipCounts';
 import ShipModeBarChart from './Charts/BarChart_ShipCounts';
 import SegmentPieChart from './Charts/PieChart_Segment';
