@@ -5,7 +5,7 @@ import json
 import pymongo
 from functools import lru_cache
 
-valueCountsRoute = APIRouter()
+SalesRoute = APIRouter()
 
 MONGO_URI = "mongodb+srv://shanukafer98:Mongodb123.@cluster0.gtbdj6v.mongodb.net/SSD"
 COLLECTION_NAME = "Charts"
@@ -13,16 +13,15 @@ client = pymongo.MongoClient(MONGO_URI)
 db = client.get_database()
 collection = db[COLLECTION_NAME]
 
-@valueCountsRoute.get("/valueCounts_shipMode_Frontend")
+@SalesRoute.get("/Sales_Frontend")
 @lru_cache(maxsize=32)
-def get_shipmode_counts():
+def get_sales():
     try:
         docs = collection.find()
         for doc in docs:
-            if 'ship_mode_counts' in doc:
-                ship_mode_counts = json.loads(doc['ship_mode_counts'])
-                return JSONResponse(content=ship_mode_counts)
+            if 'YMsales' in doc:
+                YMsales = json.loads(doc['YMsales'])
+                return JSONResponse(content=YMsales)
         return {"message": "No data found"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-

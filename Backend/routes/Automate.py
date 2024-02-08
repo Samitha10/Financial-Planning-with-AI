@@ -4,6 +4,8 @@ import pymongo
 AutomateRoute = APIRouter()
 
 data= pd.read_csv('fullData.csv')
+data['fsales'] = data['sales'] * data['quantity']
+
 MONGO_URI = "mongodb+srv://shanukafer98:Mongodb123.@cluster0.gtbdj6v.mongodb.net/SSD"
 COLLECTION_NAME = "Charts"
 client = pymongo.MongoClient(MONGO_URI)
@@ -114,6 +116,19 @@ def valueCounts_orderPriority():
         collection.delete_many({"order_priority_counts": {"$exists": True}})
         # Insert the new document
         collection.insert_one({"order_priority_counts": data9})
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    return {'message': 'Data inserted into MongoDB successfully.'}
+
+@AutomateRoute.post('/YMSales')
+def Sales():
+    try:
+        
+        data10 = data.groupby(['year', 'month']).agg({'fsales': 'sum'}).reset_index().to_json()
+        # Delete all documents that have the key "sales"
+        collection.delete_many({"YMsales": {"$exists": True}})
+        # Insert the new document
+        collection.insert_one({"YMsales": data10})
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     return {'message': 'Data inserted into MongoDB successfully.'}
