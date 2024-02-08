@@ -6,10 +6,12 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from routes.Automate import AutomateRoute
 from routes.froute import froute
+from routes.ValueCounts.valueCounts import valueCountsRoute     
 
 app = FastAPI()
 app.include_router(froute, prefix="/Froute", tags=["Froute"])
 app.include_router(AutomateRoute, prefix="/Automate", tags=["Automate"])
+app.include_router(valueCountsRoute, prefix="/ValueCounts", tags=["Froute - ValueCounts"])
 
 
 origins = [

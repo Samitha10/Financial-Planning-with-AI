@@ -26,7 +26,6 @@ def get_shipmode_counts():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-
 @froute.get("/valueCounts_segment_Frontend")
 @lru_cache(maxsize=32)
 def get_segment_counts():
@@ -62,6 +61,71 @@ def get_country_counts():
             if 'country_counts' in doc:
                 country_counts = json.loads(doc['country_counts'])
                 return JSONResponse(content=country_counts)
+        return {"message": "No data found"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@froute.get("/valueCounts_market_Frontend")
+@lru_cache(maxsize=32)
+def get_market_counts():
+    try:
+        docs = collection.find()
+        for doc in docs:
+            if 'market_counts' in doc:
+                market_counts = json.loads(doc['market_counts'])
+                return JSONResponse(content=market_counts)
+        return {"message": "No data found"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@froute.get("/valueCounts_category_Frontend")
+@lru_cache(maxsize=32)
+def get_category_counts():
+    try:
+        docs = collection.find()
+        for doc in docs:
+            if 'category_counts' in doc:
+                category_counts = json.loads(doc['category_counts'])
+                return JSONResponse(content=category_counts)
+        return {"message": "No data found"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@froute.get("/valueCounts_region_Frontend")
+@lru_cache(maxsize=32)
+def get_region_counts():
+    try:
+        docs = collection.find()
+        for doc in docs:
+            if 'region_counts' in doc:
+                region_counts = json.loads(doc['region_counts'])
+                return JSONResponse(content=region_counts)
+        return {"message": "No data found"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@froute.get("/valueCounts_subCategory_Frontend")
+@lru_cache(maxsize=32)
+def get_subCategory_counts():
+    try:
+        docs = collection.find()
+        for doc in docs:
+            if 'sub_category_counts' in doc:
+                sub_category_counts = json.loads(doc['sub_category_counts'])
+                return JSONResponse(content=sub_category_counts)
+        return {"message": "No data found"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@froute.get("/valueCounts_orderPriority_Frontend")
+@lru_cache(maxsize=32)
+def get_orderPriority_counts():
+    try:
+        docs = collection.find()
+        for doc in docs:
+            if 'order_priority_counts' in doc:
+                order_priority_counts = json.loads(doc['order_priority_counts'])
+                return JSONResponse(content=order_priority_counts)
         return {"message": "No data found"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
