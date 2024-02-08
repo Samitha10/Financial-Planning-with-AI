@@ -4,16 +4,21 @@ import ShipModeBarChart from './Charts/BarChart_ShipCounts';
 import SegmentPieChart from './Charts/PieChart_Segment';
 import SegmentBarChart from './Charts/BarChart_Segment';
 import Country_State_Count from './Charts/Country_State_Count';
+import Sales_Card from './Cards/Sales_Card';
+
 
 
 
 function App() {
-  const [chartType, setChartType] = useState('pie');
-  const [chartType1, setChartType1] = useState('pie');
+  // const [chartType, setChartType] = useState('pie');
+  // const [chartType1, setChartType1] = useState('pie');
 
+
+
+  
   return (
     <>
-      <div className="flex flex-row gap-5 bg-gradient-to-r from-black to-grey">
+      {/* <div className="flex flex-row gap-5 bg-gradient-to-r from-black to-grey">
         <div className="w-1/3 m-4 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 ">
           <div className='flex items-center justify-center '>
             <input type="radio" id="pie_ship_count" name="chartType" value="pie" checked={chartType === 'pie'} onChange={(e) => setChartType(e.target.value)} />
@@ -35,9 +40,13 @@ function App() {
         <div className="flex items-center justify-center w-1/3 m-4 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
           <Country_State_Count/>
         </div>
-      </div>
+      </div>  */}
+       <Sales_Card/>
+   
     </>
   );
 }
+
+
 
 export default App;
