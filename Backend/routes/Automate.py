@@ -10,7 +10,7 @@ client = pymongo.MongoClient(MONGO_URI)
 db = client.get_database()
 collection = db[COLLECTION_NAME]
 
-@AutomateRoute.get('/valueCounts_shipMode')
+@AutomateRoute.post('/valueCounts_shipMode')
 def valueCounts_shipMode():
     try:
         data1 = data['ship_mode'].value_counts().to_json()
@@ -22,7 +22,7 @@ def valueCounts_shipMode():
         raise HTTPException(status_code=500, detail=str(e))
     return {'message': 'Data inserted into MongoDB successfully.'}
 
-@AutomateRoute.get('/valueCounts_segment')
+@AutomateRoute.post('/valueCounts_segment')
 def valueCounts_segment():
     try:
         data2 = data['segment'].value_counts().to_json()
@@ -34,7 +34,7 @@ def valueCounts_segment():
         raise HTTPException(status_code=500, detail=str(e))
     return {'message': 'Data inserted into MongoDB successfully.'}
 
-@AutomateRoute.get('/valueCounts_state')
+@AutomateRoute.post('/valueCounts_state')
 def valueCounts_state():
     try:
         data3 = data['state'].value_counts().to_json()
@@ -46,7 +46,7 @@ def valueCounts_state():
         raise HTTPException(status_code=500, detail=str(e))
     return {'message': 'Data inserted into MongoDB successfully.'}
 
-@AutomateRoute.get('/valueCounts_country')
+@AutomateRoute.post('/valueCounts_country')
 def valueCounts_country():
     try:
         data4 = data['country'].value_counts().to_json()
@@ -58,7 +58,7 @@ def valueCounts_country():
         raise HTTPException(status_code=500, detail=str(e))
     return {'message': 'Data inserted into MongoDB successfully.'}
 
-@AutomateRoute.get('/valueCounts_market')
+@AutomateRoute.post('/valueCounts_market')
 def valueCounts_market():
     try:
         data5 = data['market'].value_counts().to_json()
@@ -70,7 +70,7 @@ def valueCounts_market():
         raise HTTPException(status_code=500, detail=str(e))
     return {'message': 'Data inserted into MongoDB successfully.'}
 
-@AutomateRoute.get('/valueCounts_region')
+@AutomateRoute.post('/valueCounts_region')
 def valueCounts_region():
     try:
         data6 = data['region'].value_counts().to_json()
@@ -82,7 +82,7 @@ def valueCounts_region():
         raise HTTPException(status_code=500, detail=str(e))
     return {'message': 'Data inserted into MongoDB successfully.'}
 
-@AutomateRoute.get('/valueCounts_category')
+@AutomateRoute.post('/valueCounts_category')
 def valueCounts_category():
     try:
         data7 = data['category'].value_counts().to_json()
@@ -94,7 +94,7 @@ def valueCounts_category():
         raise HTTPException(status_code=500, detail=str(e))
     return {'message': 'Data inserted into MongoDB successfully.'}
 
-@AutomateRoute.get('/valueCounts_subCategory')
+@AutomateRoute.post('/valueCounts_subCategory')
 def valueCounts_subCategory():
     try:
         data8 = data['sub_category'].value_counts().to_json()
@@ -106,7 +106,7 @@ def valueCounts_subCategory():
         raise HTTPException(status_code=500, detail=str(e))
     return {'message': 'Data inserted into MongoDB successfully.'}
 
-@AutomateRoute.get('/valueCounts_orderPriority')
+@AutomateRoute.post('/valueCounts_orderPriority')
 def valueCounts_orderPriority():
     try:
         data9 = data['order_priority'].value_counts().to_json()
