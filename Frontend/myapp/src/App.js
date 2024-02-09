@@ -42,8 +42,7 @@ function App() {
         </div>
       </div>  */}
        <Sales_Card/>
-//fjlzjflzjfl
-     
+
     </>
   );
 }
