@@ -43,8 +43,7 @@ function App() {
       </div>  */}
        <Sales_Card/>
 
-      //Samitha modaya 
-   
+     
     </>
   );
 }
