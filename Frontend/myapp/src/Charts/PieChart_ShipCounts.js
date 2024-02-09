@@ -10,7 +10,7 @@ function ShipModePieChart() {
   let myChart;
 
   useEffect(() => {
-    axios.get('http://localhost:8000/Froute/valueCounts_shipMode_Frontend')
+    axios.get('http://127.0.0.1:8000/ValueCounts/valueCounts_shipMode_Frontend')
       .then(response => {
         const data = {
           labels: Object.keys(response.data),

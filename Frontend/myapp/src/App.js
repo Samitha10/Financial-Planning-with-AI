@@ -5,6 +5,7 @@ import SegmentPieChart from './Charts/PieChart_Segment';
 import SegmentBarChart from './Charts/BarChart_Segment';
 import Country_State_Count from './Charts/Country_State_Count';
 import Sales_Card from './Cards/Sales_Card';
+import Sales_Chart from './Cards_Charts/Sales_Charts';
 
 
 
@@ -42,6 +43,7 @@ function App() {
         </div>
       </div>  */}
        <Sales_Card/>
+       
    
     </>
   );
