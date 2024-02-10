@@ -42,12 +42,7 @@ function App() {
         </div>
       </div>  */}
        <Sales_Card/>
-<<<<<<< Updated upstream
-      //lfmsldfn
-=======
-//shanuka
-     
->>>>>>> Stashed changes
+
     </>
   );
 }
