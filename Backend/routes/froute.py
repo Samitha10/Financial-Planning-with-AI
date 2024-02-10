@@ -25,14 +25,3 @@ def get_shipmode_counts():
         return {"message": "No data found"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-
-    try:
-        docs = collection.find()
-        for doc in docs:
-            if 'order_priority_counts' in doc:
-                order_priority_counts = json.loads(doc['order_priority_counts'])
-                return JSONResponse(content=order_priority_counts)
-        return {"message": "No data found"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
