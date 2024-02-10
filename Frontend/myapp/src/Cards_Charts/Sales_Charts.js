@@ -13,6 +13,7 @@ function SalesChart() { // Remove selectedYear as a prop
     axios.get('http://127.0.0.1:8000/Sales/Sales_Frontend')
       .then(res => {
         const parsedData = res.data;
+        let totalSales = 0;
         const labels = [];
         const data = [];
 
@@ -20,6 +21,7 @@ function SalesChart() { // Remove selectedYear as a prop
           if (year === 2014) { // Hardcode the year to 2014
             labels.push(`${year} ${monthNames[Object.values(parsedData.month)[index] - 1]}`);
             data.push(Object.values(parsedData.fsales)[index]);
+            totalSales += Object.values(parsedData.fsales)[index];
           }
         });
 
@@ -89,7 +91,7 @@ function SalesChart() { // Remove selectedYear as a prop
   }, []); // Remove selectedYear from the dependency array
 
   return (
-    <div style={{width: '350px', height: '150px'}}>
+    <div className ='w-[350px] h-[150px] flex-none'>
       <canvas ref={chartRef} />
     </div>
   );
