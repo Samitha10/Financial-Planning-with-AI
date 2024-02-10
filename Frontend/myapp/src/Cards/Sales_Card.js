@@ -5,7 +5,7 @@ import SalesChart from '../Cards_Charts/Sales_Charts';
 const Sales_Card = () => {
     return (
         <>
-            <div className='w-full h-screen bg-black '>
+            <div className='w-full h-screen bg-slate-200'>
                 <div className ="bg-white w-[500px] h-[400px] ml-[9px] pt-[2px]  rounded-lg ">
                     <div className="flex m-3 border-2 border-solid border-sky-500 bg-slate-100">
                         <div className="w-[60px] h-[60px] mx-[5px] my-[9px] flex-none bg-slate-300 rounded-lg ">
