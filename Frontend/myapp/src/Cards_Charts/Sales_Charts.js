@@ -31,7 +31,7 @@ function SalesChart() { // Remove selectedYear as a prop
             {
               data: data,
               backgroundColor: 'rgb(75, 192, 192)',
-              borderColor: 'rgba(75, 192, 192, 0.2)',
+              borderColor: 'rgba(77, 192, 192, 0.2)',
               barThickness: 20, 
             }
           ]
