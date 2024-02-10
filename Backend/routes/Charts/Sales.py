@@ -25,3 +25,16 @@ def get_sales():
         return {"message": "No data found"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+@SalesRoute.get("/Profit_Frontend")
+@lru_cache(maxsize=32)
+def get_profit():
+    try:
+        docs = collection.find()
+        for doc in docs:
+            if 'YMprofit' in doc:
+                YMprofit = json.loads(doc['YMprofit'])
+                return JSONResponse(content=YMprofit)
+        return {"message": "No data found"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

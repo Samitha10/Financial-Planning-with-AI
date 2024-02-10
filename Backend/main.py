@@ -13,7 +13,7 @@ app = FastAPI()
 app.include_router(froute, prefix="/Froute", tags=["Froute"])
 app.include_router(AutomateRoute, prefix="/Automate", tags=["Automate"])
 app.include_router(valueCountsRoute, prefix="/ValueCounts", tags=["Froute - ValueCounts"])
-app.include_router(SalesRoute, prefix="/Sales", tags=["Froute - Sales"])
+app.include_router(SalesRoute, prefix="/Sales", tags=["Froute - SalesProfit"])
 
 origins = [
     "http://localhost:3000",  # React app address
