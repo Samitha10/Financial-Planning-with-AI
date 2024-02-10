@@ -39,7 +39,32 @@ function SalesChart() { // Remove selectedYear as a prop
           type: 'bar',
           data: chartData,
           options: {
-            plugins: {
+            plugins: {  title: {
+              display: false,
+              text: 'Custom Chart Title',
+              font: {
+                size: 30,
+                weight: 'bold',
+              },
+             
+          },
+            legend: {
+              text: 'Ship Mode',
+              display:false,
+              position: 'bottom',
+              color: 'blue'
+            },
+            tooltip: {
+              callbacks: {
+                title: function(context) {
+                  return context[0].label;
+                },
+                label: function(context) {
+                  return 'Count: ' + context.parsed.y;
+                }
+              }
+            }
+              
              
             },
             scales: {
