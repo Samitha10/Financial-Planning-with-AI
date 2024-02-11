@@ -132,3 +132,15 @@ def Sales():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     return {'message': 'Data inserted into MongoDB successfully.'}
+
+@AutomateRoute.post('/YMProfit')
+def Profit():
+    try:
+        data11 = data.groupby(['year', 'month']).agg({'profit': 'sum'}).reset_index().to_json()
+        # Delete all documents that have the key "profit"
+        collection.delete_many({"YMprofit": {"$exists": True}})
+        # Insert the new document
+        collection.insert_one({"YMprofit": data11})
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    return {'message': 'Data inserted into MongoDB successfully.'}
