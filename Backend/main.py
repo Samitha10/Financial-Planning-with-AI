@@ -1,8 +1,12 @@
-from fastapi import FastAPI, HTTPException,APIRouter
+from fastapi import FastAPI, Body, HTTPException, APIRouter,Depends
 import pymongo, traceback
 from pymongo.mongo_client import MongoClient
 import pandas as pd
 from fastapi.middleware.cors import CORSMiddleware
+
+from auth.model import PostSchema, UserSchema, UserLoginSchema
+from auth.jwt_handler import signJWT
+from auth.jwt_bearer import jwtBearer
 
 from routes.Automate import AutomateRoute
 from routes.froute import froute
@@ -16,7 +20,7 @@ app.include_router(valueCountsRoute, prefix="/ValueCounts", tags=["Froute - Valu
 app.include_router(SalesRoute, prefix="/Sales", tags=["Froute - Sales"])
 
 origins = [
-    "http://localhost:3000",  # React app address
+    repr("http://localhost:3000"),  # React app address
 ]
 
 app.add_middleware(
@@ -27,37 +31,67 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get('/')
-def one():
-    return {'This is first api':'Hello World'}
 
-{# url = "mongodb+srv://shanukafer98:Mongodb123.@cluster0.gtbdj6v.mongodb.net/?retryWrites=true&w=majority"  
-# client = MongoClient(url)
-# db = client.SSD
-# collection = db.Super_Store_Data
+Posts = [
+    {
+        'id': 1,
+        'title': 'First Post',
+        'content': 'This is the content of the first post'
+    },
+    { 
+        'id': 2,
+        'title': 'Second Post',
+        'content': 'This is the content of the second post'
+    },
+    {
+        'id': 3,
+        'title': 'Third Post',
+        'content': 'This is the content of the third post'
+    }
+]
 
-# @app.get('/getdata')
-# def getdata():
-#     try:
-#         result = list(collection.find())
-#         # Convert ObjectId to str for serialization
-#         for doc in result:
-#             if "_id" in doc:
-#                 doc["_id"] = str(doc["_id"])
-#         df = pd.DataFrame(result)
-#         # Drop the '_id' column from the DataFrame
-#         df = df.drop("_id", axis=1)
+users = []
 
-#     except Exception as e:
-#         print(f"Exception: {str(e)}")
-#         traceback.print_exc()
-#         raise HTTPException(status_code=500, detail="Internal Server Error")
-    
-#     df.to_csv('fullData.csv',index=True)
+@app.get('/', tags=["Test"])
+def greet():
+    return {"message": "Hello, World!"}
 
-#     # Convert the modified DataFrame to a dictionary
-#     result1 = df.to_dict(orient='records')
+# Get all the posts
+@app.get('/Posts', tags=["Posts"])
+def get_posts():
+    return {'data': Posts}
 
-#     return {"data": result1}
-}
+# Get a single post
+@app.get('/Posts/{id}', tags=["Posts"])
+def get_one_post(id: int):
+    if id>len(Posts):
+        return {"message":"Post not found"}
+    for post in Posts:
+        if post['id'] == id:
+            return {'data': post}
+        
+# Add a new post
+@app.post('/Posts', dependencies=[Depends(jwtBearer())],tags=["Posts"])
+def add_post(post: PostSchema):
+    post.id = len(Posts) + 1
+    Posts.append(post)
+    return {'data': 'Posts added successfully'}
 
+# User Sign Up
+@app.post('/user_signup', tags=["User"])
+def user_signup(user: UserSchema = Body(default=None)):
+    users.append(user)
+    return signJWT(user.email)
+
+def check_user(data: UserLoginSchema):
+    for user in users:
+        if (user.email == data.email) and (user.password == data.password):
+            return True
+    return False
+
+@app.post('/user_login', tags=["User"])
+def user_login(user: UserLoginSchema = Body(default=None)):
+    if check_user(user):
+        return signJWT(user.email)
+    else:
+        raise HTTPException(status_code=401, detail="Invalid username or password")
