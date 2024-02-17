@@ -9,12 +9,10 @@ from auth.jwt_handler import signJWT
 from auth.jwt_bearer import jwtBearer
 
 from routes.Automate import AutomateRoute
-from routes.froute import froute
 from routes.Charts.valueCounts import valueCountsRoute    
 from routes.Charts.Sales import SalesRoute 
 
 app = FastAPI()
-app.include_router(froute, prefix="/Froute", tags=["Froute"])
 app.include_router(AutomateRoute, prefix="/Automate", tags=["Automate"])
 app.include_router(valueCountsRoute, prefix="/ValueCounts", tags=["Froute - ValueCounts"])
 app.include_router(SalesRoute, prefix="/Sales", tags=["Froute - Sales"])
@@ -52,9 +50,6 @@ Posts = [
 
 users = []
 
-@app.get('/', tags=["Test"])
-def greet():
-    return {"message": "Hello, World!"}
 
 # Get all the posts
 @app.get('/Posts', tags=["Posts"])
