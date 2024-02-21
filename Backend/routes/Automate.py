@@ -1,9 +1,11 @@
-from fastapi import FastAPI, APIRouter, HTTPException
+from fastapi import Depends, FastAPI, APIRouter, HTTPException
+from fastapi.security import OAuth2PasswordBearer
 import pandas as pd
 import pymongo
 AutomateRoute = APIRouter()
 
-from connection import data, MONGO_URI, COLLECTION_NAME, client, db, collection
+from connection import data, MONGO_URI, COLLECTION_NAME1, client, db, collection
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 @AutomateRoute.post('/valueCounts_shipMode')
 def valueCounts_shipMode():
