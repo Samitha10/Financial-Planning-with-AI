@@ -9,6 +9,7 @@ import os
 from routes.Automate import AutomateRoute
 from routes.Charts.valueCounts import valueCountsRoute    
 from routes.Charts.Sales import SalesRoute 
+from routes.Forecast import ForecastRoute
 
 app = FastAPI()
 
@@ -19,8 +20,10 @@ app.include_router(AutomateRoute,
     tags=["Automate"],
     dependencies=[Depends(oauth2_scheme)],
     responses={404: {"description": "Not found"}})
+
 app.include_router(valueCountsRoute, prefix="/ValueCounts", tags=["Froute - ValueCounts"])
 app.include_router(SalesRoute, prefix="/Sales", tags=["Froute - Sales"])
+app.include_router(ForecastRoute, prefix="/Forecast", tags=["Froute - Forecast"])
 
 origins = [
     repr("http://localhost:3000"),  # React app address
