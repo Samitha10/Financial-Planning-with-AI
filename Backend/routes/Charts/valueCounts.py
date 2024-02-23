@@ -7,11 +7,7 @@ from functools import lru_cache
 
 valueCountsRoute = APIRouter()
 
-MONGO_URI = "mongodb+srv://shanukafer98:Mongodb123.@cluster0.gtbdj6v.mongodb.net/SSD"
-COLLECTION_NAME = "Charts"
-client = pymongo.MongoClient(MONGO_URI)
-db = client.get_database()
-collection = db[COLLECTION_NAME]
+from connection import collection
 
 @valueCountsRoute.get("/valueCounts_shipMode_Frontend")
 @lru_cache(maxsize=32)

@@ -1,16 +1,7 @@
-from fastapi import FastAPI, APIRouter, HTTPException
-import pandas as pd
-import pymongo
+from fastapi import APIRouter, HTTPException
 AutomateRoute = APIRouter()
 
-data= pd.read_csv('fullData.csv')
-data['fsales'] = data['sales'] * data['quantity']
-
-MONGO_URI = "mongodb+srv://shanukafer98:Mongodb123.@cluster0.gtbdj6v.mongodb.net/SSD"
-COLLECTION_NAME = "Charts"
-client = pymongo.MongoClient(MONGO_URI)
-db = client.get_database()
-collection = db[COLLECTION_NAME]
+from connection import data, collection
 
 @AutomateRoute.post('/valueCounts_shipMode')
 def valueCounts_shipMode():
