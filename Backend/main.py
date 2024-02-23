@@ -1,23 +1,29 @@
-from fastapi import FastAPI, Body, HTTPException, APIRouter,Depends
-import pymongo, traceback
-from pymongo.mongo_client import MongoClient
-import pandas as pd
+from fastapi import APIRouter, BackgroundTasks, FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
-
-from auth.model import PostSchema, UserSchema, UserLoginSchema
-from auth.jwt_handler import signJWT
-from auth.jwt_bearer import jwtBearer
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from pydantic import BaseModel
+from dotenv import load_dotenv
+from auth.handler import signJWT
+import os
 
 from routes.Automate import AutomateRoute
-from routes.froute import froute
 from routes.Charts.valueCounts import valueCountsRoute    
 from routes.Charts.Sales import SalesRoute 
+from routes.Forecast import ForecastRoute
 
 app = FastAPI()
-app.include_router(froute, prefix="/Froute", tags=["Froute"])
-app.include_router(AutomateRoute, prefix="/Automate", tags=["Automate"])
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+app.include_router(AutomateRoute,
+    prefix="/Automate",
+    tags=["Automate"],
+    dependencies=[Depends(oauth2_scheme)],
+    responses={404: {"description": "Not found"}})
+
 app.include_router(valueCountsRoute, prefix="/ValueCounts", tags=["Froute - ValueCounts"])
 app.include_router(SalesRoute, prefix="/Sales", tags=["Froute - Sales"])
+app.include_router(ForecastRoute, prefix="/Forecast", tags=["Froute - Forecast"])
 
 origins = [
     repr("http://localhost:3000"),  # React app address
@@ -31,67 +37,29 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+load_dotenv()  # Load environment variables from .env file
 
-Posts = [
-    {
-        'id': 1,
-        'title': 'First Post',
-        'content': 'This is the content of the first post'
-    },
-    { 
-        'id': 2,
-        'title': 'Second Post',
-        'content': 'This is the content of the second post'
-    },
-    {
-        'id': 3,
-        'title': 'Third Post',
-        'content': 'This is the content of the third post'
-    }
-]
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM")
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
 
-users = []
+from connection import client,collection2
 
-@app.get('/', tags=["Test"])
-def greet():
-    return {"message": "Hello, World!"}
+class User(BaseModel):
+    Username: str
+    Password: str
 
-# Get all the posts
-@app.get('/Posts', tags=["Posts"])
-def get_posts():
-    return {'data': Posts}
 
-# Get a single post
-@app.get('/Posts/{id}', tags=["Posts"])
-def get_one_post(id: int):
-    if id>len(Posts):
-        return {"message":"Post not found"}
-    for post in Posts:
-        if post['id'] == id:
-            return {'data': post}
-        
-# Add a new post
-@app.post('/Posts', dependencies=[Depends(jwtBearer())],tags=["Posts"])
-def add_post(post: PostSchema):
-    post.id = len(Posts) + 1
-    Posts.append(post)
-    return {'data': 'Posts added successfully'}
 
-# User Sign Up
-@app.post('/user_signup', tags=["User"])
-def user_signup(user: UserSchema = Body(default=None)):
-    users.append(user)
-    return signJWT(user.email)
+@app.on_event("shutdown")
+async def shutdown_event():
+    client.close()
 
-def check_user(data: UserLoginSchema):
-    for user in users:
-        if (user.email == data.email) and (user.password == data.password):
-            return True
-    return False
-
-@app.post('/user_login', tags=["User"])
-def user_login(user: UserLoginSchema = Body(default=None)):
-    if check_user(user):
-        return signJWT(user.email)
+@app.post('/token', tags=["authentication"])
+async def login(background_tasks: BackgroundTasks, form_data: OAuth2PasswordRequestForm = Depends()):
+    user_dict = collection2.find_one({"Username": form_data.username})
+    if user_dict and user_dict["Password"] == form_data.password:
+        user = User(**user_dict)
+        return {"access_token": signJWT(user.Username), "token_type": "bearer"}
     else:
-        raise HTTPException(status_code=401, detail="Invalid username or password")
+        raise HTTPException(status_code=400, detail="Invalid credentials")
