@@ -1,7 +1,9 @@
 import pickle, json
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
-from connection import collection3
+from connection import collection3, data
+import numpy as np
+import pandas as pd
 
 ForecastRoute = APIRouter()
 
@@ -10,20 +12,41 @@ with open('models/Sales.pkl','rb') as file:
 with open('models/Profit.pkl','rb') as file:
   model2 = pickle.load(file)
 
+# Sales Forecast and Send to MongoDB
 @ForecastRoute.post('/forecastSales')
-async def forecast_route(periods: int):
+async def forecast_route():
     # Use the forecasting function to generate predictions
-    forecast_steps = periods
+    forecast_steps = 36
     forecast = model1.get_forecast(steps=forecast_steps)
     predictions = forecast.predicted_mean
+    pastData = data.groupby(['year', 'month']).agg({'sales': 'sum'}).reset_index()
+    fullPredictions = pd.concat([pastData['sales'], predictions], axis=0)
     # Send the predictions to MongoDB
     try:
         collection3.delete_many({"forecastSales": {"$exists": True}})
-        collection3.insert_one({"forecastSales": predictions.to_json()})
+        collection3.insert_one({"forecastSales": fullPredictions.to_json()})
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     return {'message': 'Data inserted into MongoDB successfully.'}
-    
+        
+# Profit Forecast and Send to MongoDB    
+@ForecastRoute.post('/forecastProfit')
+async def forecast_profit_route():
+    # Use the forecasting function to generate predictions
+    forecast_steps = 36
+    forecast = model2.get_forecast(steps=forecast_steps)
+    predictions = forecast.predicted_mean
+    pastData = data.groupby(['year', 'month']).agg({'profit': 'sum'}).reset_index()
+    fullPredictions = pd.concat([pastData['profit'], predictions], axis=0)
+    # Send the predictions to MongoDB
+    try:
+        collection3.delete_many({"forecastProfit": {"$exists": True}})
+        collection3.insert_one({"forecastProfit": fullPredictions.to_json()})
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    return {'message': 'Data inserted into MongoDB successfully.'}
+
+
 @ForecastRoute.get('/GetForecastSales')
 def get_forecast_route():
     try:
@@ -36,19 +59,6 @@ def get_forecast_route():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
-@ForecastRoute.post('/forecastProfit')
-async def forecast_profit_route(periods: int):
-    # Use the forecasting function to generate predictions
-    forecast_steps = periods
-    forecast = model2.get_forecast(steps=forecast_steps)
-    predictions = forecast.predicted_mean
-    # Send the predictions to MongoDB
-    try:
-        collection3.delete_many({"forecastProfit": {"$exists": True}})
-        collection3.insert_one({"forecastProfit": predictions.to_json()})
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    return {'message': 'Data inserted into MongoDB successfully.'}
 
 @ForecastRoute.get('/GetForecastProfit')
 def get_forecast_profit_route():

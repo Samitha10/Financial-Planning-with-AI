@@ -6,7 +6,8 @@ from connection import data, collection
 @AutomateRoute.post('/valueCounts_shipMode')
 def valueCounts_shipMode():
     try:
-        data1 = data['ship_mode'].value_counts().to_json()
+        grouped_data = data.groupby(['year', 'month', 'ship_mode'])
+        data1 = grouped_data['ship_mode'].count().to_json()
         # Delete all documents that have the key "ship_mode_counts"
         collection.delete_many({"ship_mode_counts": {"$exists": True}})
         # Insert the new document
@@ -18,7 +19,8 @@ def valueCounts_shipMode():
 @AutomateRoute.post('/valueCounts_segment')
 def valueCounts_segment():
     try:
-        data2 = data['segment'].value_counts().to_json()
+        grouped_data = data.groupby(['year', 'month', 'segment'])
+        data2 = grouped_data['segment'].count().to_json()
         # Delete all documents that have the key "segment_counts"
         collection.delete_many({"segment_counts": {"$exists": True}})
         # Insert the new document
@@ -30,7 +32,8 @@ def valueCounts_segment():
 @AutomateRoute.post('/valueCounts_state')
 def valueCounts_state():
     try:
-        data3 = data['state'].value_counts().to_json()
+        grouped_data = data.groupby(['year', 'month', 'state'])
+        data3 = grouped_data['state'].count().to_json()
         # Delete all documents that have the key "state_counts"
         collection.delete_many({"state_counts": {"$exists": True}})
         # Insert the new document
@@ -42,7 +45,8 @@ def valueCounts_state():
 @AutomateRoute.post('/valueCounts_country')
 def valueCounts_country():
     try:
-        data4 = data['country'].value_counts().to_json()
+        grouped_data = data.groupby(['year', 'month', 'country'])
+        data4 = grouped_data['country'].count().to_json()
         # Delete all documents that have the key "country_counts"
         collection.delete_many({"country_counts": {"$exists": True}})
         # Insert the new document
@@ -54,6 +58,8 @@ def valueCounts_country():
 @AutomateRoute.post('/valueCounts_market')
 def valueCounts_market():
     try:
+        grouped_data = data.groupby(['year', 'month', 'market'])
+        data5 = grouped_data['market'].count().to_json()
         data5 = data['market'].value_counts().to_json()
         # Delete all documents that have the key "market_counts"
         collection.delete_many({"market_counts": {"$exists": True}})
@@ -66,7 +72,8 @@ def valueCounts_market():
 @AutomateRoute.post('/valueCounts_region')
 def valueCounts_region():
     try:
-        data6 = data['region'].value_counts().to_json()
+        grouped_data = data.groupby(['year', 'month', 'region'])
+        data6 = grouped_data['region'].count().to_json()
         # Delete all documents that have the key "region_counts"
         collection.delete_many({"region_counts": {"$exists": True}})
         # Insert the new document
@@ -78,7 +85,8 @@ def valueCounts_region():
 @AutomateRoute.post('/valueCounts_category')
 def valueCounts_category():
     try:
-        data7 = data['category'].value_counts().to_json()
+        grouped_data = data.groupby(['year', 'month', 'category'])
+        data7 = grouped_data['category'].count().to_json()
         # Delete all documents that have the key "category_counts"
         collection.delete_many({"category_counts": {"$exists": True}})
         # Insert the new document
@@ -90,7 +98,8 @@ def valueCounts_category():
 @AutomateRoute.post('/valueCounts_subCategory')
 def valueCounts_subCategory():
     try:
-        data8 = data['sub_category'].value_counts().to_json()
+        grouped_data = data.groupby(['year', 'month', 'sub_category'])
+        data8 = grouped_data['sub_category'].count().to_json()
         # Delete all documents that have the key "sub_category_counts"
         collection.delete_many({"sub_category_counts": {"$exists": True}})
         # Insert the new document
@@ -102,7 +111,8 @@ def valueCounts_subCategory():
 @AutomateRoute.post('/valueCounts_orderPriority')
 def valueCounts_orderPriority():
     try:
-        data9 = data['order_priority'].value_counts().to_json()
+        grouped_data = data.groupby(['year', 'month', 'order_priority'])
+        data9 = grouped_data['order_priority'].count().to_json()
         # Delete all documents that have the key "order_priority_counts"
         collection.delete_many({"order_priority_counts": {"$exists": True}})
         # Insert the new document
@@ -111,11 +121,12 @@ def valueCounts_orderPriority():
         raise HTTPException(status_code=500, detail=str(e))
     return {'message': 'Data inserted into MongoDB successfully.'}
 
+## Sales and Profit Dashboard
 @AutomateRoute.post('/YMSales')
 def Sales():
     try:
         
-        data10 = data.groupby(['year', 'month']).agg({'fsales': 'sum'}).reset_index().to_json()
+        data10 = data.groupby(['year', 'month']).agg({'sales': 'sum'}).reset_index().to_json()
         # Delete all documents that have the key "sales"
         collection.delete_many({"YMsales": {"$exists": True}})
         # Insert the new document
@@ -135,6 +146,7 @@ def Profit():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     return {'message': 'Data inserted into MongoDB successfully.'}
+
 
 # Customer and Product_id Counts
 @AutomateRoute.post('/CustomerCounts')
