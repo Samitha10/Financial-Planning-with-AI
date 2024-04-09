@@ -26,7 +26,7 @@ def get_sales():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
-@SalesRoute.post('/Profit_Frontend')
+@SalesRoute.get('/Profit_Frontend')
 @lru_cache(maxsize=32)
 def get_profit():
     try:

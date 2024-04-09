@@ -10,7 +10,7 @@ with open('models/Sales.pkl','rb') as file:
 with open('models/Profit.pkl','rb') as file:
   model2 = pickle.load(file)
 
-@ForecastRoute.post('/forecast')
+@ForecastRoute.post('/forecastSales')
 async def forecast_route(periods: int):
     # Use the forecasting function to generate predictions
     forecast_steps = periods
@@ -24,7 +24,7 @@ async def forecast_route(periods: int):
         raise HTTPException(status_code=500, detail=str(e))
     return {'message': 'Data inserted into MongoDB successfully.'}
     
-@ForecastRoute.get('/GetForecast')
+@ForecastRoute.get('/GetForecastSales')
 def get_forecast_route():
     try:
         docs = collection3.find()

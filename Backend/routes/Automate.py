@@ -135,3 +135,28 @@ def Profit():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     return {'message': 'Data inserted into MongoDB successfully.'}
+
+# Customer and Product_id Counts
+@AutomateRoute.post('/CustomerCounts')
+def CustomerCounts():
+    try:
+        data12 = data['customer_name'].nunique().to_json()
+        # Delete all documents that have the key "customer_id_counts"
+        collection.delete_many({"Customer_id_counts": {"$exists": True}})
+        # Insert the new document
+        collection.insert_one({"Customer_id_counts": data12})
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    return {'message': 'Data inserted into MongoDB successfully.'}
+
+@AutomateRoute.post('/Product_idCounts')
+def Product_idCounts():
+    try:
+        data13 = data.shape[0].to_json()
+        # Delete all documents that have the key "product_id_counts"
+        collection.delete_many({"Product_id_counts": {"$exists": True}})
+        # Insert the new document
+        collection.insert_one({"Product_id_counts": data13})
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    return {'message': 'Data inserted into MongoDB successfully.'}

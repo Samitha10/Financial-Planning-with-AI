@@ -5,6 +5,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel
 from dotenv import load_dotenv
 from auth.handler import signJWT
+from cryptography.fernet import Fernet
 import os
 
 from routes.Automate import AutomateRoute
@@ -63,8 +64,10 @@ class LoginResponse(BaseModel):
 
 @app.post('/token', tags=["authentication"], response_model=LoginResponse)
 async def login(credentials: UserCredentials):
-    user_dict = collection2.find_one({"username": credentials.username})
-    if user_dict and user_dict.get("password") == credentials.password:
+    UN = credentials.username
+    PW = credentials.password
+    user_dict = collection2.find_one({"username": UN})
+    if user_dict and user_dict.get("password") == PW:
         access_token = signJWT(user_dict["username"])
         return LoginResponse(access_token=access_token, token_type="bearer", message="Login successful")
     else:
@@ -73,3 +76,51 @@ async def login(credentials: UserCredentials):
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
+    
+
+from cryptography.fernet import Fernet   
+with open("Fkey.key", "rb") as key_file:
+    Fkey = key_file.read()
+cipher_suite = Fernet(Fkey)
+
+@app.post('/tokencheck', tags=["authentication"], response_model=LoginResponse)
+async def login(credentials: UserCredentials):
+    try:
+        UN = credentials.username
+        user_dict = collection2.find_one({"username": UN})
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Invalid Username"
+        )
+    
+    decrypted_password_bytes = cipher_suite.decrypt(user_dict["password"])
+    decrypted_password = decrypted_password_bytes.decode('utf-8')
+    PW = decrypted_password
+
+    if PW == credentials.password:
+        access_token = signJWT(user_dict["username"])
+        return LoginResponse(access_token=access_token, token_type="bearer", message="Login successful")
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+
+@app.post('/register', tags=["authentication"])
+async def register(credentials: UserCredentials):
+    existing_user = collection2.find_one({"username": credentials.username})
+    if existing_user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Username already exists",
+        )
+    else:
+        password_bytes = bytes(credentials.password, 'utf-8')
+        encrypted_password = cipher_suite.encrypt(password_bytes)
+        collection2.insert_one({"username": credentials.username, "password": encrypted_password})
+        decrypted_password_bytes = cipher_suite.decrypt(encrypted_password)
+        decrypted_password = decrypted_password_bytes.decode('utf-8')
+        return {"C":credentials.password, "E":encrypted_password, "D":decrypted_password}

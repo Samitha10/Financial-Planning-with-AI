@@ -125,3 +125,30 @@ def get_orderPriority_counts():
         return {"message": "No data found"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+# Customer and Product_id Counts
+@valueCountsRoute.get("/Unique_customer_id_Frontend")
+@lru_cache(maxsize=32)
+def get_customer_id_counts():
+    try:
+        docs = collection.find()
+        for doc in docs:
+            if 'Customer_id_counts' in doc:
+                Customer_id_counts = json.loads(doc['Customer_id_counts'])
+                return JSONResponse(content=Customer_id_counts)
+        return {"message": "No data found"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@valueCountsRoute.get("/valueCounts_product_id_Frontend")
+@lru_cache(maxsize=32)
+def get_product_id_counts():
+    try:
+        docs = collection.find()
+        for doc in docs:
+            if 'Product_id_counts' in doc:
+                Product_id_counts = json.loads(doc['Product_id_counts'])
+                return JSONResponse(content=Product_id_counts)
+        return {"message": "No data found"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
