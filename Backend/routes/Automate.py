@@ -1,7 +1,8 @@
 from fastapi import APIRouter, HTTPException
 AutomateRoute = APIRouter()
 
-from connection import data, collection
+from connection import data, collection, collection4, collection5
+negData = data[data['profit'] < 0]
 
 @AutomateRoute.post('/valueCounts_shipMode')
 def valueCounts_shipMode():
@@ -60,7 +61,6 @@ def valueCounts_market():
     try:
         grouped_data = data.groupby(['year', 'month', 'market'])
         data5 = grouped_data['market'].count().to_json()
-        data5 = data['market'].value_counts().to_json()
         # Delete all documents that have the key "market_counts"
         collection.delete_many({"market_counts": {"$exists": True}})
         # Insert the new document
@@ -169,6 +169,183 @@ def Product_idCounts():
         collection.delete_many({"Product_id_counts": {"$exists": True}})
         # Insert the new document
         collection.insert_one({"Product_id_counts": data13})
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    return {'message': 'Data inserted into MongoDB successfully.'}
+
+
+# Top 20s----------------------------------------------------------------------------
+@AutomateRoute.post('/product with the most sales')
+def product_with_the_most_sales():
+    try:
+        data14 = data[['sales','product_name']].groupby('product_name').sum().sort_values('sales',ascending=False).head(10).reset_index().to_json()
+        # Delete all documents that have the key "product_with_the_most_sales"
+        collection4.delete_many({"product_with_the_most_sales": {"$exists": True}})
+        # Insert the new document
+        collection4.insert_one({"product_with_the_most_sales": data14})
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    return {'message': 'Data inserted into MongoDB successfully.'}
+
+@AutomateRoute.post('/product with average sales')
+def product_with_average_sales():
+    try:
+        data15 = data[['sales','product_name']].groupby('product_name').mean().sort_values('sales',ascending=False).head(10).reset_index().to_json()
+        # Delete all documents that have the key "product_with_average_sales"
+        collection4.delete_many({"product_with_average_sales": {"$exists": True}})
+        # Insert the new document
+        collection4.insert_one({"product_with_average_sales": data15})
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    return {'message': 'Data inserted into MongoDB successfully.'}
+
+@AutomateRoute.post('/countries with the most sales')
+def countries_with_the_most_sales():
+    try:
+        data16 = data[['sales','country']].groupby('country').sum().sort_values('sales',ascending=False).head(10).reset_index().to_json()
+        # Delete all documents that have the key "countries_with_the_most_sales"
+        collection4.delete_many({"countries_with_the_most_sales": {"$exists": True}})
+        # Insert the new document
+        collection4.insert_one({"countries_with_the_most_sales": data16})
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    return {'message': 'Data inserted into MongoDB successfully.'}
+
+@AutomateRoute.post('/countries with average sales')
+def countries_with_average_sales():
+    try:
+        data17 = data[['sales','country']].groupby('country').mean().sort_values('sales',ascending=False).head(10).reset_index().to_json()
+        # Delete all documents that have the key "countries_with_average_sales"
+        collection4.delete_many({"countries_with_average_sales": {"$exists": True}})
+        # Insert the new document
+        collection4.insert_one({"countries_with_average_sales": data17})
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    return {'message': 'Data inserted into MongoDB successfully.'}
+
+@AutomateRoute.post('/regions with the most sales')
+def regions_with_the_most_sales():
+    try:
+        data18 = data[['sales','region']].groupby('region').sum().sort_values('sales',ascending=False).head(10).reset_index().to_json()
+        # Delete all documents that have the key "regions_with_the_most_sales"
+        collection4.delete_many({"regions_with_the_most_sales": {"$exists": True}})
+        # Insert the new document
+        collection4.insert_one({"regions_with_the_most_sales": data18})
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    return {'message': 'Data inserted into MongoDB successfully.'}
+
+@AutomateRoute.post('/regions with average sales')
+def regions_with_average_sales():
+    try:
+        data19 = data[['sales','region']].groupby('region').mean().sort_values('sales',ascending=False).head(10).reset_index().to_json()
+        # Delete all documents that have the key "regions_with_average_sales"
+        collection4.delete_many({"regions_with_average_sales": {"$exists": True}})
+        # Insert the new document
+        collection4.insert_one({"regions_with_average_sales": data19})
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    return {'message': 'Data inserted into MongoDB successfully.'}
+
+
+### Negative Subset
+
+#Top 20 best selling products in the Negative subset
+@AutomateRoute.post('/Negative product with the most sales')
+def Negative_Product_with_the_most_sales():
+    try:
+        data20 = negData[['product_name','sales']].groupby('product_name').sum().sort_values('sales', ascending=False).reset_index().head(10).to_json()
+        # Delete all documents that have the key "product_with_the_most_sales_in_the_negative_subset"
+        collection5.delete_many({"product_with_the_most_sales": {"$exists": True}})
+        # Insert the new document
+        collection5.insert_one({"product_with_the_most_sales": data20})
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    return {'message': 'Data inserted into MongoDB successfully.'}
+
+#Top 20: Average best-selling products in the Negative subset
+@AutomateRoute.post('/Negative product with average sales')
+def Negative_Product_with_average_sales():
+    try:
+        data21 = negData[['product_name','sales']].groupby('product_name').mean().sort_values('sales', ascending=False).reset_index().head(10).to_json()
+        # Delete all documents that have the key "product_with_average_sales_in_the_negative_subset"
+        collection5.delete_many({"product_with_average_sales": {"$exists": True}})
+        # Insert the new document
+        collection5.insert_one({"product_with_average_sales": data21})
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    return {'message': 'Data inserted into MongoDB successfully.'}
+
+#Negative ['order_priority','market','region','category','sub_category','ship_mode'] with profit
+@AutomateRoute.post('/Negative order priprity with profit')
+def Negative_Order_priority_with_profit():
+    try:
+        data22 = negData[['order_priority','profit']].groupby('order_priority').sum().sort_values('profit', ascending=False).reset_index().to_json()
+        # Delete all documents that have the key "order_priority_with_profit"
+        collection5.delete_many({"order_priority_with_profit": {"$exists": True}})
+        # Insert the new document
+        collection5.insert_one({"order_priority_with_profit": data22})
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    return {'message': 'Data inserted into MongoDB successfully.'}
+
+
+@AutomateRoute.post('/Negative market with profit')
+def Negative_Market_with_profit():
+    try:
+        data23 = negData[['market','profit']].groupby('market').sum().sort_values('profit', ascending=False).reset_index().to_json()
+        # Delete all documents that have the key "market_with_profit"
+        collection5.delete_many({"market_with_profit": {"$exists": True}})
+        # Insert the new document
+        collection5.insert_one({"market_with_profit": data23})
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    return {'message': 'Data inserted into MongoDB successfully.'}
+
+@AutomateRoute.post('/Negative region with profit')
+def Negative_Region_with_profit():
+    try:
+        data24 = negData[['region','profit']].groupby('region').sum().sort_values('profit', ascending=False).reset_index().to_json()
+        # Delete all documents that have the key "region_with_profit"
+        collection5.delete_many({"region_with_profit": {"$exists": True}})
+        # Insert the new document
+        collection5.insert_one({"region_with_profit": data24})
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    return {'message': 'Data inserted into MongoDB successfully.'}
+
+@AutomateRoute.post('/Negative category with profit')
+def Negative_Category_with_profit():
+    try:
+        data25 = negData[['category','profit']].groupby('category').sum().sort_values('profit', ascending=False).reset_index().to_json()
+        # Delete all documents that have the key "category_with_profit"
+        collection5.delete_many({"category_with_profit": {"$exists": True}})
+        # Insert the new document
+        collection5.insert_one({"category_with_profit": data25})
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    return {'message': 'Data inserted into MongoDB successfully.'}
+
+@AutomateRoute.post('/Negative sub_category with profit')
+def Negative_Sub_category_with_profit():
+    try:
+        data26 = negData[['sub_category','profit']].groupby('sub_category').sum().sort_values('profit', ascending=False).reset_index().to_json()
+        # Delete all documents that have the key "sub_category_with_profit"
+        collection5.delete_many({"sub_category_with_profit": {"$exists": True}})
+        # Insert the new document
+        collection5.insert_one({"sub_category_with_profit": data26})
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    return {'message': 'Data inserted into MongoDB successfully.'}
+
+@AutomateRoute.post('/Negative ship_mode with profit')
+def Negative_Ship_mode_with_profit():
+    try:
+        data27 = negData[['ship_mode','profit']].groupby('ship_mode').sum().sort_values('profit', ascending=False).reset_index().to_json()
+        # Delete all documents that have the key "ship_mode_with_profit"
+        collection5.delete_many({"ship_mode_with_profit": {"$exists": True}})
+        # Insert the new document
+        collection5.insert_one({"ship_mode_with_profit": data27})
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     return {'message': 'Data inserted into MongoDB successfully.'}

@@ -5,9 +5,9 @@ import os
 
 load_dotenv()
 
-def signJWT(username: str):
+def signJWT(email: str):
     payload = {
-        'username': username,
+        'email': email,
         'expiry': time.time() + 600
     }
     token = jwt.encode(payload, os.getenv("SECRET_KEY"), algorithm="HS256")
