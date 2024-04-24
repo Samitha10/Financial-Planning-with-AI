@@ -1,8 +1,47 @@
 from fastapi import APIRouter, HTTPException
+import pymongo
 AutomateRoute = APIRouter()
 
-from connection import data, collection, collection4, collection5
+from connection import data, collection, collection4, collection5, MONGO_URI
 negData = data[data['profit'] < 0]
+
+current_data_count = 51287
+
+def Datacount():
+    try:
+        # Connect to the MongoDB server
+        client = pymongo.MongoClient(MONGO_URI)
+        db = client.get_database()
+
+        COLLECTION_NAME1 = "Super_Store_Data"
+        collection = db[COLLECTION_NAME1]
+
+        # Count the number of documents in the collection
+        count = collection.count_documents({})
+
+        return count
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@AutomateRoute.get('/Datacount')
+def datacount():
+    return {'data_count': Datacount()}
+
+# Checking wheather the data is added or deleted from the MongoDB
+def check_count():
+    global current_data_count
+    if current_data_count == Datacount():
+        return True
+    else:
+        current_data_count = Datacount()
+        return {'Data is being updated',current_data_count}
+
+
+@AutomateRoute.get('/check_count')
+def get_check_count():
+    return check_count()
+
 
 @AutomateRoute.post('/valueCounts_shipMode')
 def valueCounts_shipMode():
